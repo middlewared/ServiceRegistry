@@ -7,24 +7,16 @@ import static com.baku.persistentserviceregistry.business.entity.ServiceLocation
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import org.apache.commons.lang3.tuple.Triple;
 
 @Singleton
-@Startup
 public class ServiceRepository {
 
-    private ConcurrentHashMap<String, List<Triple>> services;
-
-    @PostConstruct
-    private void init() {
-        services = new ConcurrentHashMap<>();
-    }
+    private final ConcurrentHashMap<String, List<Triple>> services = new ConcurrentHashMap<>();
 
     public void createService(Service service) {
         services.put(service.getServiceName(), new LinkedList<>());
@@ -39,6 +31,19 @@ public class ServiceRepository {
     }
 
     public void addLocationToService(String serviceName, String uri) {
-        services.get(serviceName).add(Triple.of(new ServiceLocation(uri), new LocationStats(), UNKNOWN));
+        List<Triple> urisWithStats = services.get(serviceName);
+
+        for (Triple uriWithStats : urisWithStats) {
+            if (((ServiceLocation) uriWithStats.getLeft()).getLocationUri().equals(uri)) {
+                return;
+            }
+        }
+
+        urisWithStats.add(Triple.of(new ServiceLocation(uri), new LocationStats(), UNKNOWN));
     }
+
+    public void method() {
+
+    }
+
 }
