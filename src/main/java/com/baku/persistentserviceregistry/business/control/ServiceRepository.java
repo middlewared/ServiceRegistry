@@ -42,8 +42,11 @@ public class ServiceRepository {
         urisWithStats.add(Triple.of(new ServiceLocation(uri), new LocationStats(), UNKNOWN));
     }
 
-    public void method() {
-
+    public List<Triple> getAllServicesUris() {
+        List<Triple> combinedUrisList = new LinkedList<>();
+        services.values().forEach((uriWithStatsAndStatus) -> {
+            combinedUrisList.addAll(uriWithStatsAndStatus);
+        });
+        return combinedUrisList;
     }
-
 }

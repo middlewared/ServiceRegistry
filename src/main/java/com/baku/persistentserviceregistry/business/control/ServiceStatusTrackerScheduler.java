@@ -12,6 +12,6 @@ public class ServiceStatusTrackerScheduler {
 
     @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
     public void initCheck() {
-        serviceStatusTracker.checkServicesStatus();
+        serviceStatusTracker.updateServicesStatuses();
     }
 }
