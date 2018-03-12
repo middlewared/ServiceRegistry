@@ -24,7 +24,7 @@ public class ServiceRepository {
 
     public Response createService(Service service) throws URISyntaxException {
         if (services.contains(service.getServiceName())) {
-            return Response.status(CONFLICT).build();
+            return Response.status(CONFLICT).header("x-reason", "Object already exists").build();
         }
 
         services.put(service.getServiceName(), new LinkedList<>());

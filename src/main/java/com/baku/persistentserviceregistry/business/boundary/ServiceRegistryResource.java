@@ -24,12 +24,7 @@ public class ServiceRegistryResource {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response addService(Service service) throws URISyntaxException {
-        try {
-            serviceRepository.createService(service);
-        } catch (Exception e) {
-            return Response.serverError().build();
-        }
-        return Response.ok().build();
+        return serviceRepository.createService(service);
     }
 
     @GET
@@ -37,7 +32,7 @@ public class ServiceRegistryResource {
     public JsonArray getServicesList() {
         return serviceRepository.getAllServiceNames();
     }
-    
+
 //    @PUT
 //    public void addServiceLocation(@QueryParam("serviceName") String serviceName, @QueryParam("uri") String uri) {
 //        serviceRepository.addLocationToService(serviceName, serviceName);
