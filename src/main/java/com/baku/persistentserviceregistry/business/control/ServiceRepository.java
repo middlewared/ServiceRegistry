@@ -15,6 +15,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import org.apache.commons.lang3.tuple.Triple;
 
 @Singleton
@@ -39,16 +40,20 @@ public class ServiceRepository {
         return arrayBuilder.build();
     }
 
-    public void addLocationToService(String serviceName, String uri) {
-        List<Triple> urisWithStats = services.get(serviceName);
+    public Response addLocationToService(String serviceName, String uri) throws URISyntaxException {
+        if (!services.contains(serviceName)) {
+            return Response.status(NOT_FOUND).header("x-reason", "Service doesn't exist").build();
+        }
 
-        for (Triple uriWithStats : urisWithStats) {
-            if (((ServiceLocation) uriWithStats.getLeft()).getLocationUri().equals(uri)) {
-                return;
+        List<Triple> urisWithStatsAndStatus = services.get(serviceName);
+        for (Triple uriWithStatsAndStatus : urisWithStatsAndStatus) {
+            if (((ServiceLocation) uriWithStatsAndStatus.getLeft()).getLocationUri().equals(uri)) {
+                return Response.status(CONFLICT).header("x-reason", "Uri already exists for service " + serviceName).build();
             }
         }
 
-        urisWithStats.add(Triple.of(new ServiceLocation(uri), new LocationStats(), UNKNOWN));
+        urisWithStatsAndStatus.add(Triple.of(new ServiceLocation(uri), new LocationStats(), UNKNOWN));
+        return Response.created(new URI("ServiceRegistry/resources/services/" + serviceName)).build();
     }
 
     public List<Triple> getAllServicesUris() {

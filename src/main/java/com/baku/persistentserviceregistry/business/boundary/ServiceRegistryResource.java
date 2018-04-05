@@ -9,8 +9,10 @@ import javax.json.JsonArray;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
 
@@ -33,8 +35,8 @@ public class ServiceRegistryResource {
         return serviceRepository.getAllServiceNames();
     }
 
-//    @PUT
-//    public void addServiceLocation(@QueryParam("serviceName") String serviceName, @QueryParam("uri") String uri) {
-//        serviceRepository.addLocationToService(serviceName, serviceName);
-//    } 
+    @PUT
+    public Response addServiceLocation(@QueryParam("serviceName") String serviceName, @QueryParam("uri") String uri) {
+        return serviceRepository.addLocationToService(serviceName, serviceName);
+    } 
 }
