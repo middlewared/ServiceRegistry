@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.JsonArray;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -28,6 +29,12 @@ public class ServiceRegistryResource {
     public Response addService(Service service) throws URISyntaxException {
         return serviceRepository.createService(service);
     }
+    
+    @DELETE
+    @Consumes(APPLICATION_JSON)
+    public Response removeService(@QueryParam("serviceName") String serviceName) throws URISyntaxException {
+        return serviceRepository.removeService(serviceName);
+    } 
 
     @GET
     @Produces(APPLICATION_JSON)
@@ -36,7 +43,7 @@ public class ServiceRegistryResource {
     }
 
     @PUT
-    public Response addServiceLocation(@QueryParam("serviceName") String serviceName, @QueryParam("uri") String uri) {
-        return serviceRepository.addLocationToService(serviceName, serviceName);
+    public Response addServiceLocation(@QueryParam("serviceName") String serviceName, @QueryParam("uri") String uri) throws URISyntaxException {
+        return serviceRepository.addLocationToService(serviceName, uri);
     } 
 }
